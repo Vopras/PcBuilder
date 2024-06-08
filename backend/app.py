@@ -58,6 +58,29 @@ def get_collection_data(collection_name):
 
     return jsonify(data_list)
 
+@app.route('/collection_data2/<collection_name>')
+def get_collection_data2(collection_name):
+    collection_data = mongo.db[collection_name].find()
+    data_list = list(collection_data)
+    names = []
+    # Convert to a serializable format and handle NaN values
+    for item in data_list:
+        names.append(item['name'])
+    names.sort()
+    return jsonify(names)
+
+@app.route('/search/<category>/<name>')
+def search(category, name):
+    collection = mongo.db[category]
+    filtered_results = collection.find({"name": {"$regex": name, "$options": "i"}})
+    results = list(filtered_results)
+    for result in results:
+        for key, value in result.items():
+            if isinstance(value, float) and math.isnan(value):
+                result[key] = None  # or 'N/A', 0, or remove the key
+        result['_id'] = str(result['_id'])
+    return jsonify(results)
+
 
 
 if __name__ == '__main__':

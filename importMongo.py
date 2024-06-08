@@ -1,16 +1,16 @@
 import pandas as pd
 from pymongo import MongoClient
 import os
-from pypartpicker import Scraper
+# from pypartpicker import Scraper
 
 
 # MongoDB connection string
 mongo_uri = "mongodb://localhost:27017/"
 # Name of the database
-database_name = "Test"
+database_name = "Test2"
 
 # Folder path containing your CSV files
-folder_path = "../pc-part-dataset/data/csv/"
+folder_path = "../pcpartpicker_data/pc-part-dataset/data1/csv/"
 
 # Create a MongoDB client
 client = MongoClient(mongo_uri)
@@ -39,15 +39,15 @@ def process_csv(file_path, collection_name):
                 collection.insert_one(record)
 
 # Loop through each CSV file in the directory
-# for filename in os.listdir(folder_path):
-#     if filename.endswith('.csv'):
-#         file_path = os.path.join(folder_path, filename)
-#         # Set the collection name based on the filename (without the .csv extension)
-#         collection_name = filename[:-4]
-#         process_csv(file_path, collection_name)
-#         print(f"Processed {filename}")
+for filename in os.listdir(folder_path):
+    if filename.endswith('.csv'):
+        file_path = os.path.join(folder_path, filename)
+        # Set the collection name based on the filename (without the .csv extension)
+        collection_name = filename[:-4]
+        process_csv(file_path, collection_name)
+        print(f"Processed {filename}")
 
-# print("Data insertion complete.")
+print("Data insertion complete.")
                 
 
 # List all collection names in the database
